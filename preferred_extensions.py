@@ -1,9 +1,9 @@
-def make_sets(graph):
-    ins = [v.name for v in graph.vertices.values() if v.label=='in']
-    outs = [v.name for v in graph.vertices.values() if v.label=='out']
-    unds = [v.name for v in graph.vertices.values() if v.label=='und']
-    return (set(ins), set(outs), set(unds))
+from enum import Enum
 
+class Label(Enum):
+    IN = 1
+    OUT = 2
+    UND = 3
 
 class Vertex(object):
     def __init__(self, name):
@@ -22,6 +22,14 @@ class Vertex(object):
         if self.vocal:
             print("Vertex", self.name, "set from", self.label, "to", label)
         self.label = label
+
+
+def make_sets(graph):
+    ins = [v.name for v in graph.vertices.values() if v.label=='in']
+    outs = [v.name for v in graph.vertices.values() if v.label=='out']
+    unds = [v.name for v in graph.vertices.values() if v.label=='und']
+    return (set(ins), set(outs), set(unds))
+
 
 
 class Graph(object):
