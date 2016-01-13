@@ -9,7 +9,7 @@ class Vertex(object):
     def __init__(self, name):
         self.name = name
         self.attacks = []
-        self.label = 'und'
+        self.label = Label.UND
         self.vocal = False
 
     def copy(self):
@@ -25,9 +25,9 @@ class Vertex(object):
 
 
 def make_sets(graph):
-    ins = [v.name for v in graph.vertices.values() if v.label=='in']
-    outs = [v.name for v in graph.vertices.values() if v.label=='out']
-    unds = [v.name for v in graph.vertices.values() if v.label=='und']
+    ins = [v.name for v in graph.vertices.values() if v.label==Label.IN]
+    outs = [v.name for v in graph.vertices.values() if v.label==Label.OUT]
+    unds = [v.name for v in graph.vertices.values() if v.label==Label.UND]
     return (set(ins), set(outs), set(unds))
 
 
@@ -53,7 +53,7 @@ class Graph(object):
         pairs = [(v.name, v.label) for v in self.vertices.values()]
         pairs.sort()
         for name, label in pairs:
-            print(name+": "+label)
+            print(name+": "+str(label))
 
     def vertex(self, name):
         return self.vertices[name]
@@ -64,33 +64,33 @@ class Graph(object):
     def find_illegal(self):
         super_illegal = []
         illegal = []
-        for v in [self.vertex(name) for name in self.vertices if self.vertex(name).label=='in']:
-            if not all(att.label=='out' for att in self.attackers_of(v.name)):
+        for v in [self.vertex(name) for name in self.vertices if self.vertex(name).label==Label.IN]:
+            if not all(att.label==Label.OUT for att in self.attackers_of(v.name)):
                 illegal.append(v)
         for v in illegal:
-            if any((att.label in ['in', 'und'])and(att not in illegal) and (att not in super_illegal) for att in self.attackers_of(v.name)):
+            if any((att.label in [Label.IN, Label.UND])and(att not in illegal) and (att not in super_illegal) for att in self.attackers_of(v.name)):
                 super_illegal.append(v)
         illegal = [v for v in illegal if v not in super_illegal]
         return ([v.name for v in super_illegal], [v.name for v in illegal])
 
     def is_illegal_out(self, name):
-        if self.vertex(name).label != 'out':
+        if self.vertex(name).label != Label.OUT:
             return False
         attackers = self.attackers_of(name)
-        return all(v.label!='in' for v in attackers)
+        return all(v.label!=Label.IN for v in attackers)
 
     def shift(self, vertex_name):
         ver = self.vertex(vertex_name)
-        ver.set_label('out')
+        ver.set_label(Label.OUT)
         for v in [v for v in ver.attacks+[ver] if self.is_illegal_out(v.name)]:
-            v.set_label('und')
+            v.set_label(Label.UND)
         return self
 
     def find_pref(self):
         Cand = {'val':[]}
         graph = self.copy()
         for v in graph.vertices.values():
-            v.label = 'in'
+            v.label = Label.IN
         def find_pref_rec(graph, level):
             print("Level", level)
             print("Doing graph",id(graph), ":")
@@ -133,8 +133,8 @@ class Graph(object):
 # g.add_attack('a','b')
 # g.add_attack('b','c')
 # for name in names:
-#     g.vertex(name).label = 'in'
-# #g.vertex('b').label = 'out'
+#     g.vertex(name).label = Label.IN
+# #g.vertex('b').label = Label.OUT
 # illegal = g.find_illegal()
 # print(illegal)
 # g2 = g.copy()
