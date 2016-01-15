@@ -5,6 +5,10 @@ class Label(Enum):
     OUT = 2
     UND = 3
 
+    def __str__(self):
+        return self.name
+
+
 class Vertex(object):
     def __init__(self, name):
         self.name = name
@@ -127,42 +131,42 @@ class Graph(object):
         return Cand
 
 
+if __name__ == '__main__':
+    # names = ['a', 'b', 'c']
+    # g = Graph(names)
+    # g.add_attack('a','b')
+    # g.add_attack('b','c')
+    # for name in names:
+    #     g.vertex(name).label = Label.IN
+    # #g.vertex('b').label = Label.OUT
+    # illegal = g.find_illegal()
+    # print(illegal)
+    # g2 = g.copy()
+    # print(g2.find_illegal())
+    # g.print_labels()
+    # g2.print_labels()
+    # print("G3")
+    # print([v.name for v in g.vertex('a').attacks])
+    # print([v.name for v in g.vertex('b').attacks])
+    # g.copy().shift('c').shift('b').print_labels()
+    names = ['a','b','c','d','e','f','g','h','i','j','k']
+    g = Graph(names)
+    g.add_attack('a', 'b')
+    g.add_attack('a', 'c')
+    g.add_attack('c', 'h')
+    g.add_attack('h', 'g')
+    g.add_attack('g', 'i')
+    g.add_attack('g', 'e')
+    g.add_attack('g', 'd')
+    g.add_attack('e', 'k')
+    g.add_attack('e', 'j')
+    g.add_attack('k', 'd')
+    g.add_attack('d', 'j')
+    g.add_attack('d', 'f')
+    g.add_attack('j', 'h')
+    g.add_attack('f', 'h')
+    g.add_attack('i', 'e')
 
-# names = ['a', 'b', 'c']
-# g = Graph(names)
-# g.add_attack('a','b')
-# g.add_attack('b','c')
-# for name in names:
-#     g.vertex(name).label = Label.IN
-# #g.vertex('b').label = Label.OUT
-# illegal = g.find_illegal()
-# print(illegal)
-# g2 = g.copy()
-# print(g2.find_illegal())
-# g.print_labels()
-# g2.print_labels()
-# print("G3")
-# print([v.name for v in g.vertex('a').attacks])
-# print([v.name for v in g.vertex('b').attacks])
-# g.copy().shift('c').shift('b').print_labels()
-names = ['a','b','c','d','e','f','g','h','i','j','k']
-g = Graph(names)
-g.add_attack('a', 'b')
-g.add_attack('a', 'c')
-g.add_attack('c', 'h')
-g.add_attack('h', 'g')
-g.add_attack('g', 'i')
-g.add_attack('g', 'e')
-g.add_attack('g', 'd')
-g.add_attack('e', 'k')
-g.add_attack('e', 'j')
-g.add_attack('k', 'd')
-g.add_attack('d', 'j')
-g.add_attack('d', 'f')
-g.add_attack('j', 'h')
-g.add_attack('f', 'h')
-g.add_attack('i', 'e')
-
-cand = g.find_pref()
-for ext in cand['val']:
-    print(ext)
+    cand = g.find_pref()
+    for ext in cand['val']:
+        print(ext)
